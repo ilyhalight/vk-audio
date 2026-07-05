@@ -24,6 +24,10 @@ export type AudioItem = {
    */
   duration: number;
   title: string;
+  /**
+   * e.g. hardstyle, speed up and etc
+   */
+  subtitle?: string;
   artist: string;
   artists?: Artist[];
   isExplicit: boolean;
@@ -45,6 +49,7 @@ export type AudioSection = MinimalAudioSection & {
   breadcrumbs?: Breadcrumb[];
   nextOffset?: string;
   audios: AudioItem[];
+  recentAudios?: AudioItem[];
 };
 
 export type AudioSectionList = {

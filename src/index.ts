@@ -22,6 +22,7 @@ import type {
 } from "./types/client/section";
 import { getTimestamp, returnError } from "./utils";
 import type { BaseClient } from "./client";
+import type { SectionBlockAudios } from "./types/api/blocks";
 
 const DEFAULT_LANG = "en";
 /**
@@ -202,17 +203,29 @@ export class VKAudio {
     startFrom?: string,
   ): Promise<AudioSection> {
     const {
-      section: { id, breadcrumbs, title, next_from: nextOffset, url },
+      section: { id, blocks, breadcrumbs, title, next_from: nextOffset, url },
       audios: dataAudios,
     } = await this.rawGetSection(sectionId, startFrom);
-    const audios: AudioItem[] = dataAudios.map((audio) => {
+    const recentBlock = blocks?.find(
+      (block) =>
+        block.data_type === "music_audios" &&
+        (block as SectionBlockAudios).url.includes("&block=recent"),
+    );
+    const recentIds = new Set(
+      (recentBlock as SectionBlockAudios)?.audios_ids || [],
+    );
+    const recentAudios: AudioItem[] = [];
+
+    const audios: AudioItem[] = dataAudios.reduce((result, audio) => {
       const {
         id,
+        owner_id,
         artist,
         main_artists,
         duration,
         title,
         album,
+        subtitle,
         is_explicit: isExplicit,
         has_lyrics: hasLyrics,
         like: isLiked,
@@ -221,10 +234,11 @@ export class VKAudio {
         date: createdAt,
       } = audio;
 
-      return {
+      const data = {
         id,
         duration,
         artist,
+        subtitle,
         artists: main_artists?.length
           ? main_artists.map((art) => ({
               name: art.name,
@@ -248,7 +262,20 @@ export class VKAudio {
         thumbnail,
         createdAt,
       } satisfies AudioItem;
-    });
+
+      if (!recentIds.size) {
+        result.push(data);
+        return result;
+      }
+
+      const doubleId = `${owner_id}_${id}`;
+      if (recentIds.has(doubleId)) {
+        recentAudios.push(data);
+        recentIds.delete(doubleId);
+      }
+
+      return result;
+    }, [] as AudioItem[]);
 
     return {
       id,
@@ -257,6 +284,7 @@ export class VKAudio {
       nextOffset,
       url,
       audios,
+      recentAudios,
     };
   }
 }
