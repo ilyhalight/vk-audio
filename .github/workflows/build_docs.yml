@@ -1,0 +1,31 @@
+name: Build docs
+
+on: [push, pull_request, workflow_call]
+
+permissions:
+  contents: write
+
+jobs:
+  build-docs:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout 🛎️
+        uses: actions/checkout@v7
+
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
+
+      - name: Install packages 🔧
+        run: bun install
+
+      - name: Build 🚧
+        run: bun build:doc
+
+      - name: Upload Docs artifact 🚀
+        id: deployment
+        uses: actions/upload-pages-artifact@v5
+        with:
+          path: docs
