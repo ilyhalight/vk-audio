@@ -4,11 +4,6 @@ import { VKWebClient } from "../src/client";
 import type { VKClientRefreshData } from "../src/types/client";
 import type { VKAudioSuccessResult } from "../src/types";
 
-const ACCESS_TOKEN = Bun.env.VK_ACCESS_TOKEN;
-if (!ACCESS_TOKEN) {
-  throw new Error("You should set VK_ACCESS_TOKEN in .env");
-}
-
 const COOKIE_P = Bun.env.VK_COOKIE_P;
 const COOKIE_REMIX_SID = Bun.env.VK_COOKIE_REMIX_SID;
 if (!(COOKIE_P && COOKIE_REMIX_SID)) {
