@@ -2,7 +2,7 @@
   "name": "@toil/vk-audio",
   "author": "Toil",
   "description": "Library for using Modern VK Audio API",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "type": "module",
   "private": false,
   "license": "MIT",
@@ -20,6 +20,9 @@
     "client",
     "music",
     "vkmusic"
+  ],
+  "files": [
+    "dist"
   ],
   "devDependencies": {
     "@types/bun": "^1.3.14",
