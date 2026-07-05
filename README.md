@@ -11,7 +11,6 @@ Supports:
 
 Unsupported:
 
-- Blocks data (who needs this...)
 - Some other endpoints...
 
 ## Usage
