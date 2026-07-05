@@ -21,10 +21,16 @@ export type PlaylistFollowed = {
   owner_id: number;
 };
 
+/**
+ * ugc - user generated content
+ * generated - by server-side logic
+ */
+export type PlaylistType = "ugc" | "generated";
+
 export type Playlist = {
   id: number;
   owner_id: number;
-  type: "ugc";
+  type: PlaylistType;
   title: string;
   description: string;
   /**
@@ -55,4 +61,6 @@ export type Playlist = {
    * hex color
    */
   main_color?: string;
+  subtitle?: string;
+  meta?: Record<"view", "compact">;
 };
