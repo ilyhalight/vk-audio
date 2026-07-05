@@ -1,5 +1,6 @@
 import type { Audio } from "./audio";
 import type { Playlist } from "./audio/playlist";
+import type { SectionBlock } from "./blocks";
 import type { Group } from "./group";
 import type { Link } from "./link";
 import type { Profile } from "./profile";
@@ -33,7 +34,7 @@ export type MinimalAudioSection = {
 
 export type AudioSection = MinimalAudioSection & {
   breadcrumbs?: Breadcrumb[];
-  blocks?: unknown[];
+  blocks?: SectionBlock[];
   /**
    * ID offset
    * @api used as `start_from` param
