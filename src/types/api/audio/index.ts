@@ -30,6 +30,7 @@ export type Audio = {
    * seconds
    */
   duration: number;
+  subtitle?: string;
   access_key: string;
   ads: AudioAd;
   is_explicit: boolean;
@@ -54,4 +55,7 @@ export type Audio = {
   thumb: Thumbail;
   has_lyrics?: true;
   permissions?: Record<"edit", boolean>;
+  short_videos_allowed?: boolean;
+  stories_allowed?: boolean;
+  stories_cover_allowed?: boolean;
 };
