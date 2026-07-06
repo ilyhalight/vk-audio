@@ -1,3 +1,7 @@
+# 0.0.4
+
+- Fixed invalid track list in `audios` and `recentAudios` fields in `getSection` method
+
 # 0.0.3
 
 - Fixed merging of `recent` audios in `getSection` method

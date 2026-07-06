@@ -20,7 +20,7 @@ import type {
   AudioSection,
   AudioSectionList,
 } from "./types/client/section";
-import { getTimestamp, returnError } from "./utils";
+import { getAudiosById, getTimestamp, returnError } from "./utils";
 import type { BaseClient } from "./client";
 import type { SectionBlockAudios } from "./types/api/blocks";
 
@@ -211,71 +211,16 @@ export class VKAudio {
         block.data_type === "music_audios" &&
         (block as SectionBlockAudios).url.includes("&block=recent"),
     );
-    const recentIds = new Set(
-      (recentBlock as SectionBlockAudios)?.audios_ids || [],
+    const audiosBlock = blocks?.find(
+      (block) =>
+        block.data_type === "music_audios" &&
+        !(block as SectionBlockAudios).url.includes("&block=recent"),
     );
-    const recentAudios: AudioItem[] = [];
+    const recentIds = (recentBlock as SectionBlockAudios)?.audios_ids || [];
+    const audiosIds = (audiosBlock as SectionBlockAudios)?.audios_ids || [];
 
-    const audios: AudioItem[] = dataAudios.reduce((result, audio) => {
-      const {
-        id,
-        owner_id,
-        artist,
-        main_artists,
-        duration,
-        title,
-        album,
-        subtitle,
-        is_explicit: isExplicit,
-        has_lyrics: hasLyrics,
-        like: isLiked,
-        url: fileUrl,
-        thumb: thumbnail,
-        date: createdAt,
-      } = audio;
-
-      const data = {
-        id,
-        duration,
-        artist,
-        subtitle,
-        artists: main_artists?.length
-          ? main_artists.map((art) => ({
-              name: art.name,
-              id: art.id,
-            }))
-          : undefined,
-        title,
-        isExplicit,
-        hasLyrics: hasLyrics === true,
-        isLiked,
-        fileUrl,
-        album: album
-          ? {
-              id: album.id,
-              ownerId: album.owner_id,
-              title: album.title,
-              thumbnail: album.thumb,
-              mainColor: album.main_color,
-            }
-          : undefined,
-        thumbnail,
-        createdAt,
-      } satisfies AudioItem;
-
-      if (!recentIds.size) {
-        result.push(data);
-        return result;
-      }
-
-      const doubleId = `${owner_id}_${id}`;
-      if (recentIds.has(doubleId)) {
-        recentAudios.push(data);
-        recentIds.delete(doubleId);
-      }
-
-      return result;
-    }, [] as AudioItem[]);
+    const recentAudios: AudioItem[] = getAudiosById(dataAudios, recentIds);
+    const audios: AudioItem[] = getAudiosById(dataAudios, audiosIds);
 
     return {
       id,
