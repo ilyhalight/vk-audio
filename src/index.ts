@@ -20,9 +20,20 @@ import type {
   AudioSection,
   AudioSectionList,
 } from "./types/client/section";
-import { getAudiosById, getTimestamp, returnError } from "./utils";
+import {
+  getAudioItem,
+  getAudiosById,
+  getTimestamp,
+  returnError,
+} from "./utils";
 import type { BaseClient } from "./client";
 import type { SectionBlockAudios } from "./types/api/blocks";
+import type {
+  GetSearchSuggestionsResponse,
+  SearchAudioData,
+  SearchAudioResponse,
+} from "./types/api/audio/search";
+import type { SearchAudioResult } from "./types/client/audio";
 
 const DEFAULT_LANG = "en";
 /**
@@ -230,6 +241,65 @@ export class VKAudio {
       url,
       audios,
       recentAudios,
+    };
+  }
+
+  /**
+   * Get search suggestions
+   *
+   * @param {string} query - Search query
+   */
+  async getSearchSuggestion(query: string): Promise<string[]> {
+    const body = this.createBody({
+      query,
+    });
+
+    const section = await this.request<GetSearchSuggestionsResponse>(
+      "audio.getSearchSuggestions",
+      body,
+    );
+    if (!section.success) {
+      throw section;
+    }
+
+    return section.data.response.suggestions;
+  }
+
+  /**
+   * Search audio
+   *
+   * @param {string} query - Search query
+   * @param {number} [offset] - Offset for search results
+   */
+  async rawSearchAudio(
+    query: string,
+    offset?: number,
+  ): Promise<SearchAudioData> {
+    const body = this.createBody({
+      q: query,
+      offset: offset?.toString(),
+    });
+
+    const section = await this.request<SearchAudioResponse>(
+      "audio.search",
+      body,
+    );
+    if (!section.success) {
+      throw section;
+    }
+
+    return section.data.response;
+  }
+
+  async searchAudio(
+    query: string,
+    offset?: number,
+  ): Promise<SearchAudioResult> {
+    const { count, items } = await this.rawSearchAudio(query, offset);
+    const audios = items.map((audio) => getAudioItem(audio));
+    return {
+      count,
+      audios,
     };
   }
 }

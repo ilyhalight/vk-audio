@@ -78,3 +78,25 @@ describe("get section", () => {
     expect(result.audios.length).toBeGreaterThan(1);
   });
 });
+
+test("get search suggestions [wrapper]", async () => {
+  const suggestions = await client.getSearchSuggestion("Imagine Dragons");
+  console.log(JSON.stringify(suggestions));
+  expect(suggestions.length).toBeGreaterThan(0);
+});
+
+describe("search audio", () => {
+  test("[raw]", async () => {
+    const result = await client.rawSearchAudio("Imagine Dragons");
+    expect(result.items.length).toBeGreaterThan(0);
+  });
+  test("[raw] with offset", async () => {
+    const result = await client.rawSearchAudio("Imagine Dragons", 100);
+    console.log(result);
+    expect(result.items.length).toBeGreaterThan(0);
+  });
+  test("[wrapper]", async () => {
+    const result = await client.searchAudio("Imagine Dragons");
+    expect(result.audios.length).toBeGreaterThan(0);
+  });
+});

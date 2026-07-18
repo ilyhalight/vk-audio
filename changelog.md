@@ -1,3 +1,10 @@
+# 0.0.5
+
+- Added `searchAudio` method to search for audio tracks with optional offset
+- Added `getSearchSuggestion` method to get search suggestions for audio tracks
+- Changed default api domain `vk.com` --> `vk.ru`
+- Bump dev depends
+
 # 0.0.4
 
 - Fixed invalid track list in `audios` and `recentAudios` fields in `getSection` method

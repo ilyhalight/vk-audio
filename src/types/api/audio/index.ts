@@ -1,6 +1,8 @@
 import type { AudioAd } from "./ad";
 import type { Thumbail } from "./thumbnail";
 
+export type AudioMethod = "audio.getSearchSuggestions" | "audio.search";
+
 export type Album = {
   id: number;
   title: string;

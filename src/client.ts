@@ -9,7 +9,7 @@ import type {
 import { returnError } from "./utils";
 
 const DEFAULT_VERSION = "5.282";
-const DEFAULT_API_BASE = "https://api.vk.com/method/";
+const DEFAULT_API_BASE = "https://api.vk.ru/method/";
 
 export class BaseClient implements VKClient {
   readonly _name: string = "BaseClient";
@@ -55,11 +55,11 @@ export class VKWebClient extends BaseClient {
   override readonly userAgent =
     "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:153.0) Gecko/20100101 Firefox/153.0";
 
-  override authBase = "https://login.vk.com/?act=web_token";
+  override authBase = "https://login.vk.ru/?act=web_token";
   override authCookie: string;
 
-  origin = "https://vk.com";
-  referer = "https://vk.com/";
+  origin = "https://vk.ru";
+  referer = "https://vk.ru/";
 
   constructor(opts: VKWebClientOpts) {
     super(opts);

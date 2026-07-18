@@ -2,7 +2,7 @@
   "name": "@toil/vk-audio",
   "author": "Toil",
   "description": "Library for using Modern VK Audio API",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "type": "module",
   "private": false,
   "license": "MIT",
@@ -26,12 +26,12 @@
   ],
   "devDependencies": {
     "@types/bun": "^1.3.14",
-    "lefthook": "^2.1.9",
-    "oxfmt": "^0.57.0",
-    "oxlint": "^1.72.0",
+    "lefthook": "^2.1.10",
+    "oxfmt": "^0.59.0",
+    "oxlint": "^1.74.0",
     "tsc-esm-fix": "^3.1.2",
-    "typedoc": "^0.28.19",
-    "typedoc-plugin-missing-exports": "^4.1.3"
+    "typedoc": "^0.28.20",
+    "typedoc-plugin-missing-exports": "^4.1.4"
   },
   "publishConfig": {
     "access": "public"
