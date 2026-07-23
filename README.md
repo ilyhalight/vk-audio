@@ -52,7 +52,7 @@ You can see more usage examples in [tests](./tests) folder
 Lib provides support:
 
 - **VK Web** client with `p` and `remixsid` cookie (just steal it from `Network` tab in browser)
-- **VK Mobile** client, but without auto-refresh (token lifetime is 10800)
+- **VK Mobile** client, but without auto-refresh (token lifetime is `10800`)
 
 ## References
 

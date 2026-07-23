@@ -33,7 +33,12 @@ import type {
   SearchAudioData,
   SearchAudioResponse,
 } from "./types/api/audio/search";
-import type { SearchAudioResult } from "./types/client/audio";
+import type { AddAudioResult, SearchAudioResult } from "./types/client/audio";
+import type { AudioAddResponse, AudioAddResult } from "./types/api/audio/add";
+import type {
+  AudioDeleteResponse,
+  AudioDeleteResult,
+} from "./types/api/audio/delete";
 
 const DEFAULT_LANG = "en";
 /**
@@ -301,5 +306,56 @@ export class VKAudio {
       count,
       audios,
     };
+  }
+
+  async rawAdd(ownerId: number, audioId: number): Promise<AudioAddResult> {
+    const body = this.createBody({
+      owner_id: ownerId.toString(),
+      audio_id: audioId.toString(),
+    });
+
+    const res = await this.request<AudioAddResponse>("audio.add", body);
+    if (!res.success) {
+      throw res;
+    }
+
+    return res.data.response;
+  }
+
+  async add(ownerId: number, audioId: number): Promise<AddAudioResult> {
+    const result = await this.rawAdd(ownerId, audioId);
+    const addedAudio = result.items[0];
+    if (!addedAudio) {
+      throw new Error(
+        `Failed to add audio ${ownerId}_${audioId}. No result returned`,
+      );
+    }
+
+    return {
+      audioId: addedAudio.new_audio_id,
+      ownerId: addedAudio.new_owner_id,
+    };
+  }
+
+  async rawDelete(
+    ownerId: number,
+    audioId: number,
+  ): Promise<AudioDeleteResult> {
+    const body = this.createBody({
+      owner_id: ownerId.toString(),
+      audio_id: audioId.toString(),
+    });
+
+    const res = await this.request<AudioDeleteResponse>("audio.delete", body);
+    if (!res.success) {
+      throw res;
+    }
+
+    return res.data.response;
+  }
+
+  async delete(ownerId: number, audioId: number): Promise<boolean> {
+    const result = await this.rawDelete(ownerId, audioId);
+    return result.audio_ids.some((id) => id === `${ownerId}_${audioId}`);
   }
 }

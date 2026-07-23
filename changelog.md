@@ -1,3 +1,8 @@
+# 0.0.6
+
+- Added `add` method to add audio track to user's audio list
+- Added `delete` method to delete audio track from user's audio list
+
 # 0.0.5
 
 - Added `searchAudio` method to search for audio tracks with optional offset

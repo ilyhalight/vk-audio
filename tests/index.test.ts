@@ -100,3 +100,23 @@ describe("search audio", () => {
     expect(result.audios.length).toBeGreaterThan(0);
   });
 });
+
+describe("add/delete audio", () => {
+  test("[raw]", async () => {
+    const result = await client.rawAdd(591523674, 456239125);
+    expect(result.items_count).toBeGreaterThan(0);
+    const newAudio = result.items[0];
+    expect(newAudio).not.toBe(undefined);
+    const deleteResult = await client.rawDelete(
+      newAudio!.new_owner_id,
+      newAudio!.new_audio_id,
+    );
+    expect(deleteResult.audio_ids.length).toBeGreaterThan(0);
+  });
+  test("[wrapper]", async () => {
+    const result = await client.add(591523674, 456239125);
+    expect(result).not.toBe(undefined);
+    const deleteResult = await client.delete(result.ownerId, result.audioId);
+    expect(deleteResult).toBe(true);
+  });
+});
