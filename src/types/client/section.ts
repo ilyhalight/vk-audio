@@ -19,6 +19,7 @@ export type Artist = {
 
 export type AudioItem = {
   id: number;
+  ownerId: number;
   /**
    * seconds
    */

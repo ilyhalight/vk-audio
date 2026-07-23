@@ -9,6 +9,7 @@ export const getTimestamp = () => Math.floor(Date.now() / 1000);
 export const getAudioItem = (audio: Audio) => {
   const {
     id,
+    owner_id: ownerId,
     artist,
     main_artists,
     duration,
@@ -25,6 +26,7 @@ export const getAudioItem = (audio: Audio) => {
 
   return {
     id,
+    ownerId,
     duration,
     artist,
     subtitle,

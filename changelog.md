@@ -1,3 +1,7 @@
+# 0.0.7
+
+- Added `ownerId` field to `AudioItem` type in `getSection` method
+
 # 0.0.6
 
 - Added `add` method to add audio track to user's audio list
