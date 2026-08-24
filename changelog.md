@@ -1,3 +1,8 @@
+# 0.0.8
+
+- Now `artists` field in client `AudioItem` is always set
+- `id` field in client `Artist` type is now optional, because it can be `undefined` if `main_artists` is empty and used `artist` field fallback
+
 # 0.0.7
 
 - Added `ownerId` field to `AudioItem` type in `getSection` method

@@ -14,7 +14,7 @@ export type Album = {
 
 export type Artist = {
   name: string;
-  id: string;
+  id?: string;
 };
 
 export type AudioItem = {

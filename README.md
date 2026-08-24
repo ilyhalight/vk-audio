@@ -51,7 +51,7 @@ You can see more usage examples in [tests](./tests) folder
 
 Lib provides support:
 
-- **VK Web** client with `p` and `remixsid` cookie (just steal it from `Network` tab in browser)
+- **VK Web** client with `p` and `remixsid` cookie (just steal it from `Network` tab in browser, token lifetime is 50+ days (I'll check when the token stops working))
 - **VK Mobile** client, but without auto-refresh (token lifetime is `10800`)
 
 ## References

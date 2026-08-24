@@ -24,18 +24,24 @@ export const getAudioItem = (audio: Audio) => {
     date: createdAt,
   } = audio;
 
+  const artists = main_artists?.length
+    ? main_artists.map((art) => ({
+        name: art.name,
+        id: art.id,
+      }))
+    : [
+        {
+          name: artist,
+        },
+      ];
+
   return {
     id,
     ownerId,
     duration,
     artist,
     subtitle,
-    artists: main_artists?.length
-      ? main_artists.map((art) => ({
-          name: art.name,
-          id: art.id,
-        }))
-      : undefined,
+    artists,
     title,
     isExplicit,
     hasLyrics: hasLyrics === true,
