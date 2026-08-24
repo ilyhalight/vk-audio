@@ -30,7 +30,7 @@ export type AudioItem = {
    */
   subtitle?: string;
   artist: string;
-  artists?: Artist[];
+  artists: Artist[];
   isExplicit: boolean;
   isLiked: boolean;
   hasLyrics: boolean;

@@ -1,3 +1,7 @@
+# 0.0.9
+
+- Removed optional attr from `artists` field in client `AudioItem`
+
 # 0.0.8
 
 - Now `artists` field in client `AudioItem` is always set
