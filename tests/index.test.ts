@@ -76,6 +76,12 @@ describe("get section", () => {
     const result = await client.getSection(myMusicId);
     expect(result.title === TEST_SECTION_TITLE);
     expect(result.audios.length).toBeGreaterThan(1);
+    for (const audio of result.audios) {
+      expect(
+        audio.artists.length,
+        "wrapper should returns not empty artists field",
+      ).toBeGreaterThan(0);
+    }
   });
 });
 
@@ -92,12 +98,26 @@ describe("search audio", () => {
   });
   test("[raw] with offset", async () => {
     const result = await client.rawSearchAudio("Imagine Dragons", 100);
-    console.log(result);
     expect(result.items.length).toBeGreaterThan(0);
   });
   test("[wrapper]", async () => {
     const result = await client.searchAudio("Imagine Dragons");
     expect(result.audios.length).toBeGreaterThan(0);
+  });
+  test("[wrapper] should returns artists without main_artists", async () => {
+    const title = "レビテト / LOL feat. 重音テトSV";
+    const result = await client.searchAudio(title);
+    expect(result.audios.length).toBeGreaterThan(0);
+
+    const audioItem = result.audios.find(
+      (audio) => audio.artist === "PPP Sounds" && audio.title === title,
+    );
+    expect(audioItem).not.toBe(undefined);
+    if (!audioItem) {
+      return;
+    }
+
+    expect(audioItem.artists.length).toBeGreaterThan(0);
   });
 });
 
