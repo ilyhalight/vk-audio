@@ -7,7 +7,6 @@ import type { Profile } from "./profile";
 import type { APISuccessResponse } from "./response";
 
 export type CatalogMethod = "catalog.getAudio" | "catalog.getSection";
-export type CatalogBaseResponse<T> = Record<"catalog", T>;
 
 export type Breadcrumb = {
   label: string;
@@ -43,18 +42,75 @@ export type AudioSection = MinimalAudioSection & {
   actions?: SectionActionItem[];
 };
 
+export type AudioDataButtonActionType =
+  | "add_playlist"
+  | "music_transfer"
+  | "upload_audio";
+
+export type AudioDataButtonAction = {
+  type: AudioDataButtonActionType;
+  style: "default";
+};
+
+export type AudioDataButton = {
+  action: AudioDataButtonAction;
+  owner_id: number;
+  /**
+   * raw i18n phrase, e.g. `audio_music_transfer`
+   */
+  title: string;
+};
+
 export type GetAudioData = {
   default_section: string;
   sections: MinimalAudioSection[];
   /**
    * @only in web client
    */
-  buttons?: unknown[];
+  buttons?: AudioDataButton[];
 };
 
 export type GetAudioResponse = APISuccessResponse<
-  CatalogBaseResponse<GetAudioData>
+  Record<"catalog", GetAudioData>
 >;
+
+export type AudioStreamMix = {
+  /**
+   * "common" for vk mix
+   */
+  id: string;
+  description: string;
+  /**
+   * lottie background animation json url
+   */
+  background_animation_url: string;
+  is_tunable: boolean;
+  titles: {
+    common_state: string;
+    play_state: string;
+  };
+  stream_mix: {
+    /**
+     * "common" for vk mix
+     */
+    id: string;
+    title: string;
+  };
+};
+
+export type AudioWithBlocksData = {
+  catalog: GetAudioData;
+  audio_stream_mixes: AudioStreamMix[];
+  profiles: Profile[];
+  /**
+   * last played
+   */
+  audios: Audio[];
+  playlists: Playlist[];
+};
+
+export type GetAudioWithBlocksResponse =
+  APISuccessResponse<AudioWithBlocksData>;
 
 export type MinimalAudioSectionData = {
   section: AudioSection;

@@ -1,9 +1,11 @@
 import type { VKAudioResult } from "./types";
 import type { APIErrorResponse } from "./types/api/response";
 import type {
+  AudioWithBlocksData,
   GetAudioData,
   GetAudioResponse,
   GetAudioSectionData,
+  GetAudioWithBlocksResponse,
   GetSectionResponse,
 } from "./types/api/catalog";
 import type {
@@ -19,10 +21,13 @@ import type {
   AudioItem,
   AudioSection,
   AudioSectionList,
+  AudioSectionListWithBlocks,
 } from "./types/client/section";
 import {
   getAudioItem,
+  getAudioMixItem,
   getAudiosById,
+  getPlaylistItem,
   getTimestamp,
   returnError,
 } from "./utils";
@@ -148,19 +153,37 @@ export class VKAudio {
    * Get available sections raw data
    *
    * @param {string} [ownerId] - User or community id. If not specified, current user audios will be returned
-   * @todo need_blocks param
+   * @param {boolean} [needBlocks] - If true, will return blocks data
    */
-  async rawGetSections(ownerId?: string): Promise<GetAudioData> {
+  async rawGetSections(
+    ownerId?: string,
+    needBlocks?: false,
+  ): Promise<GetAudioData>;
+  async rawGetSections(
+    ownerId?: string,
+    needBlocks?: true,
+  ): Promise<AudioWithBlocksData>;
+  async rawGetSections(
+    ownerId: string | undefined,
+    needBlocks: boolean,
+  ): Promise<GetAudioData | AudioWithBlocksData>;
+  async rawGetSections(
+    ownerId?: string,
+    needBlocks: boolean = false,
+  ): Promise<GetAudioData | AudioWithBlocksData> {
     const body = this.createBody({
       owner_id: ownerId,
+      need_blocks: needBlocks ? "1" : undefined,
     });
 
-    const sections = await this.request<GetAudioResponse>(
-      "catalog.getAudio",
-      body,
-    );
+    const sections = await this.request<
+      GetAudioWithBlocksResponse | GetAudioResponse
+    >("catalog.getAudio", body);
     if (!sections.success) {
       throw sections;
+    }
+    if (needBlocks) {
+      return sections.data.response as AudioWithBlocksData;
     }
 
     return sections.data.response.catalog;
@@ -170,15 +193,38 @@ export class VKAudio {
    * Get available sections
    *
    * @param {string} [ownerId] - User or community id. If not specified, current user audios will be returned
-   * @todo need_blocks param
    */
   async getSections(ownerId?: string): Promise<AudioSectionList> {
     const { default_section: defaultSection, sections } =
-      await this.rawGetSections(ownerId);
+      await this.rawGetSections(ownerId, false);
 
     return {
       defaultSection,
       sections,
+    };
+  }
+
+  /**
+   * Get available sections with blocks
+   *
+   * @param {string} [ownerId] - User or community id. If not specified, current user audios will be returned
+   */
+  async getSectionsWithBlocks(
+    ownerId?: string,
+  ): Promise<AudioSectionListWithBlocks> {
+    const {
+      catalog: { default_section: defaultSection, sections },
+      audio_stream_mixes: audioStreamMixes,
+      audios,
+      playlists,
+    } = await this.rawGetSections(ownerId, true);
+
+    return {
+      defaultSection,
+      sections,
+      audioMixes: audioStreamMixes.map((audioMix) => getAudioMixItem(audioMix)),
+      recentAudios: audios.map((audio) => getAudioItem(audio)),
+      playlists: playlists.map((playlist) => getPlaylistItem(playlist)),
     };
   }
 

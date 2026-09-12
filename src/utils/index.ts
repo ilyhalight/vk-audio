@@ -1,5 +1,17 @@
 import type { Audio } from "../types/api/audio";
-import type { AudioItem } from "../types/client/section";
+import type {
+  Playlist,
+  PlaylistFollowed,
+  PlaylistOriginal,
+} from "../types/api/audio/playlist";
+import type { AudioStreamMix } from "../types/api/catalog";
+import type {
+  AudioItem,
+  AudioMix,
+  PlaylistItem,
+  PlaylistItemFollowed,
+  PlaylistItemOriginal,
+} from "../types/client/section";
 
 export const returnError = (error: unknown) =>
   Error.isError(error) ? error : new Error((error as string).toString());
@@ -74,4 +86,100 @@ export const getAudiosById = (dataAudios: Audio[], audioIds: string[]) => {
       return getAudioItem(audio);
     })
     .filter((audio) => audio !== null);
+};
+
+export const getAudioMixItem = ({
+  id,
+  description,
+  background_animation_url: lottieBgUrl,
+  is_tunable: isTunable,
+  titles: { common_state: common, play_state: play },
+}: AudioStreamMix): AudioMix => {
+  return {
+    id,
+    description,
+    lottieBgUrl,
+    isTunable,
+    titles: {
+      common,
+      play,
+    },
+  };
+};
+
+export const getPlaylistItemOriginal = (
+  playlistOriginal?: PlaylistOriginal,
+): PlaylistItemOriginal | undefined => {
+  if (!playlistOriginal) {
+    return undefined;
+  }
+
+  const {
+    playlist_id: playlistId,
+    owner_id: ownerId,
+    access_key: accessKey,
+  } = playlistOriginal;
+  return {
+    playlistId,
+    ownerId,
+    accessKey,
+  };
+};
+
+export const getPlaylistItemFollowed = (
+  playlistFollowed?: PlaylistFollowed,
+): PlaylistItemFollowed | undefined => {
+  if (!playlistFollowed) {
+    return undefined;
+  }
+
+  const { playlist_id: playlistId, owner_id: ownerId } = playlistFollowed;
+  return {
+    playlistId,
+    ownerId,
+  };
+};
+
+export const getPlaylistItem = ({
+  id,
+  owner_id: ownerId,
+  type,
+  title,
+  description,
+  count,
+  followers,
+  plays,
+  create_time: createdAt,
+  update_time: updatedAt,
+  genres,
+  is_following: isFollowing,
+  photo,
+  thumbs,
+  access_key: accessKey,
+  original,
+  followed,
+  main_color: mainColor,
+  subtitle,
+}: Playlist): PlaylistItem => {
+  return {
+    id,
+    ownerId,
+    type,
+    title,
+    description,
+    count,
+    followers,
+    plays,
+    createdAt,
+    updatedAt,
+    genres,
+    isFollowing,
+    photo,
+    thumbs,
+    accessKey,
+    original: getPlaylistItemOriginal(original),
+    followed: getPlaylistItemFollowed(followed),
+    mainColor,
+    subtitle,
+  };
 };

@@ -30,20 +30,44 @@ const clientOpts: VKAudioOpts = {
 const client = new VKAudio(clientOpts);
 
 describe("get sections", () => {
-  test("[raw] current user", async () => {
-    const result = await client.rawGetSections();
-    expect(result.sections.length).toBeGreaterThan(0);
-    const myMusic = result.sections.find(
-      (section) => section.title === "My music",
-    );
-    expect(myMusic).not.toBe(undefined);
+  describe("raw", () => {
+    test("current user", async () => {
+      const result = await client.rawGetSections();
+      expect(result.sections.length).toBeGreaterThan(0);
+      const myMusic = result.sections.find(
+        (section) => section.title === "My music",
+      );
+      expect(myMusic).not.toBe(undefined);
+    });
+    test("with blocks", async () => {
+      const result = await client.rawGetSections(undefined, true);
+      const sections = result.catalog.sections;
+      expect(sections.length).toBeGreaterThan(0);
+      const myMusic = sections.find((section) => section.title === "My music");
+      expect(myMusic).not.toBe(undefined);
+      expect(result.audio_stream_mixes.length).toBeGreaterThan(0);
+      expect(result.playlists.length).toBeGreaterThan(0);
+    });
   });
-  test("[wrapper] with ownerId", async () => {
-    const result = await client.getSections("612495802");
-    expect(result.sections.length).toBeGreaterThan(0);
-    expect(
-      result.sections.find((section) => section.title === "Music"),
-    ).not.toBe(undefined);
+  describe("wrapper", () => {
+    test("with ownerId", async () => {
+      const result = await client.getSections("612495802");
+      expect(result.sections.length).toBeGreaterThan(0);
+      expect(
+        result.sections.find((section) => section.title === "Music"),
+      ).not.toBe(undefined);
+    });
+    test("with blocks", async () => {
+      const result = await client.getSectionsWithBlocks();
+      expect(result.sections.length).toBeGreaterThan(0);
+      expect(
+        result.sections.find((section) => section.title === "My music"),
+      ).not.toBe(undefined);
+      expect(result.audioMixes.length).toBeGreaterThan(0);
+      expect(result.playlists.length).toBeGreaterThan(0);
+      expect(result.playlists[0]?.ownerId).not.toBe(undefined);
+      expect(result.audioMixes[0]?.isTunable).not.toBe(undefined);
+    });
   });
 });
 

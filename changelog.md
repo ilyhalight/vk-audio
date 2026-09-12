@@ -1,3 +1,10 @@
+# 0.0.10
+
+- Added method `getSectionsWithBlocks` to get sections with blocks (adds playlists, recentAudios, audioMixes to response)
+- Added support for `need_blocks` param in `getSections` method
+- Removed `CatalogBaseResponse` type
+- Bump dev depends
+
 # 0.0.9
 
 - Removed optional attr from `artists` field in client `AudioItem`
